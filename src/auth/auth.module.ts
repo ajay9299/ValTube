@@ -8,6 +8,9 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { AuthSchema } from './infrastructure/schema/auth.schema';
 import { LoginAuthCommand } from './command/auth.login.command';
 import { JwtService } from '@nestjs/jwt';
+import { VaultService } from './domain/services/vault.service';
+import { APP_GUARD } from '@nestjs/core';
+import { AuthGuard } from './guard/auth.guard';
 
 @Module({
   imports: [MongooseModule.forFeature([
@@ -15,8 +18,13 @@ import { JwtService } from '@nestjs/jwt';
     ]),],
   controllers: [AuthController],
   providers: [
+    {
+    provide: APP_GUARD,
+    useClass: AuthGuard,
+    },
     AuthService,
     JwtService,
+    VaultService,
     CreateAuthCommand,
     LoginAuthCommand,
     { provide: AUTH_REPOSITORY, useClass: MongoAuthRepository }

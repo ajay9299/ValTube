@@ -14,7 +14,6 @@ export class MongoAuthRepository implements AuthRepository {
   ) {}
 
   async save(user: Auth): Promise<void> {
-    console.log('Saving user to MongoDB:', user); // Debugging statement
     await new this.userModel(user).save();
   }
 
