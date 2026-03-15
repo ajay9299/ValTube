@@ -23,7 +23,7 @@ ${keys.privateKey}
         return {
             access_token: await this.jwtService.signAsync(payload, {
                 secret: privateKey,
-                expiresIn: '1m',
+                expiresIn: '10m',
                 algorithm: 'RS256',
             }),
         };

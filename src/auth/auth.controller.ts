@@ -27,9 +27,4 @@ export class AuthController {
     const { username, password } = CreateUserDto;
     return await this.loginAuthCommand.execute(username, password);
   }
-
-  @Get('profile')
-  getProfile(@Request() req) {
-    return req.user;
-  }
 }
