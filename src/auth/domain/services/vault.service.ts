@@ -16,7 +16,6 @@ export class VaultService {
 
   async onModuleInit() {
     const result = await this.client.read('secret/data/jwt');
-
     this.keys = {
       privateKey: result.data.data.privateKey,
       publicKey: result.data.data.publicKey,

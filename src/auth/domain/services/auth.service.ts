@@ -15,10 +15,7 @@ export class AuthService {
         userId: Types.ObjectId
     ): Promise<{ access_token: string }> {
         const keys = await this.vaultService.getJwtKeys();
-
-        const privateKey = `-----BEGIN RSA PRIVATE KEY-----
-${keys.privateKey}  
------END RSA PRIVATE KEY-----`;
+        const privateKey = keys.privateKey;
         const payload = { userId };
         return {
             access_token: await this.jwtService.signAsync(payload, {
