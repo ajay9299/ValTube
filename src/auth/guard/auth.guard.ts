@@ -11,8 +11,8 @@ export const Public = () => SetMetadata(IS_PUBLIC_KEY, true);
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(private jwtService: JwtService, private reflector: Reflector,
-       private readonly vaultService: VaultService
-  ) {}
+    private readonly vaultService: VaultService
+  ) { }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
@@ -30,12 +30,11 @@ export class AuthGuard implements CanActivate {
       throw new UnauthorizedException();
     }
     try {
-        const keys = await this.vaultService.getJwtKeys();
-        const publickkey = `-----BEGIN PUBLIC KEY-----
-${keys.publicKey}  
------END PUBLIC KEY-----`;
+      const keys = await this.vaultService.getJwtKeys();
+      const publickkey = keys.publicKey;
       const payload = await this.jwtService.verifyAsync(token, {
-        secret: publickkey});
+        secret: publickkey
+      });
       request['user'] = payload;
     } catch {
       throw new UnauthorizedException();
