@@ -84,3 +84,156 @@
   ```bash
   vault kv get secret/jwt
   ```
+
+
+  # 🚀 Local Development Setup (MongoDB + Vault + LocalStack S3)
+
+---
+
+## ▶️ Start Services
+
+```bash
+docker-compose up -d
+```
+
+---
+
+## 🛑 Stop Services (Keep Data)
+
+```bash
+docker-compose down
+```
+
+---
+
+## 🧹 Stop & Remove Everything (Containers + Volumes)
+
+```bash
+docker-compose down -v
+```
+
+---
+
+## 🔍 Check Running Containers
+
+```bash
+docker ps
+```
+
+---
+
+# 🔐 Vault Setup (First Time Only)
+
+## Enter Vault Container
+
+```bash
+docker exec -it vault sh
+```
+
+## Set Vault Address
+
+```bash
+export VAULT_ADDR=http://127.0.0.1:8200
+```
+
+## Initialize Vault
+
+```bash
+vault operator init
+```
+
+## Unseal Vault (Run 3 times with different keys)
+
+```bash
+vault operator unseal
+```
+
+## Login
+
+```bash
+vault login <ROOT_TOKEN>
+```
+
+## Enable KV v2 Engine
+
+```bash
+vault secrets enable -path=secret kv-v2
+```
+
+## Store JWT Keys
+
+```bash
+vault kv put secret/jwt \
+privateKey=@/vault/file/private.key \
+publicKey=@/vault/file/public.key
+```
+
+---
+
+# 🗄️ MongoDB Connection
+
+```bash
+mongodb://admin:password@localhost:27017
+```
+
+---
+
+# ☁️ LocalStack (S3) Setup
+
+## Configure AWS CLI
+
+```bash
+aws configure
+```
+
+Use:
+
+```
+Access Key: test
+Secret Key: test
+Region: us-east-1
+```
+
+## Create S3 Bucket
+
+```bash
+aws --endpoint-url=http://localhost:4566 s3 mb s3://my-bucket
+```
+
+## List Buckets
+
+```bash
+aws --endpoint-url=http://localhost:4566 s3 ls
+```
+
+---
+
+# 🧹 Clean Specific Data
+
+## Remove Only Mongo Data
+
+```bash
+docker volume rm valtube_mongo-data
+```
+
+## Remove Only Vault Data
+
+```bash
+docker volume rm valtube_vault-data
+```
+
+## Remove Only LocalStack Data
+
+```bash
+docker volume rm valtube_localstack-data
+```
+
+---
+
+# 💡 Recommended (Use Project Name)
+
+```bash
+docker-compose -p valtube up -d
+```
+
+---
