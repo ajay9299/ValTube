@@ -160,6 +160,9 @@ vault login <ROOT_TOKEN>
 vault secrets enable -path=secret kv-v2
 ```
 
+## Copy files to vault volume
+docker cp private.key vault:/tmp/public.key 
+
 ## Store JWT Keys
 
 ```bash

@@ -20,21 +20,7 @@ services:
     ports:
       - "8200:8200"
     environment:
-      VAULT_LOCAL_CONFIG: |
-        {
-          "backend": {
-            "file": {
-              "path": "/vault/file"
-            }
-          },
-          "listener": [{
-            "tcp": {
-              "address": "0.0.0.0:8200",
-              "tls_disable": 1
-            }
-          }],
-          "ui": true
-        }
+      VAULT_DEV_ROOT_TOKEN_ID: root
     cap_add:
       - IPC_LOCK
     volumes:
@@ -50,6 +36,7 @@ services:
       - SERVICES=s3
       - DEBUG=1
       - DATA_DIR=/var/lib/localstack/data
+      - LOCALSTACK_ACKNOWLEDGE_ACCOUNT_REQUIREMENT=1
     volumes:
       - localstack-data:/var/lib/localstack
 
