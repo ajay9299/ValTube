@@ -1,6 +1,7 @@
 import { Schema } from "mongoose";
 
 export const VideoSchema = new Schema({
+    userId: { type: Schema.Types.ObjectId, required: true },
     title: String,
     description: String,
     url: String,

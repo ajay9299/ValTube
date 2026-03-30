@@ -8,8 +8,7 @@ import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { AUTH_REPOSITORY } from '../domain/repositories/auth.repository';
 import type { AuthRepository } from '../domain/repositories/auth.repository';
 import { Auth } from '../domain/entities/auth.entity';
-import { v4 as uuidv4 } from 'uuid';
-import { ObjectId, Types } from 'mongoose';
+import { Types } from 'mongoose';
 
 @Injectable()
 export class CreateAuthCommand {
