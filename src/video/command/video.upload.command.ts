@@ -3,7 +3,6 @@ import { VIDEO_REPOSITORY } from "../domain/repository/video.repository";
 import type { VideoRepository } from "../domain/repository/video.repository";
 import { VideoService } from "../domain/services/video.service";
 
-
 export class UploadVideoCommand {
   constructor(
     @Inject(VIDEO_REPOSITORY)
@@ -13,7 +12,16 @@ export class UploadVideoCommand {
   ) {}
 
   async execute(userId: string, file: Express.Multer.File) {
-    const data = this.VideoService.uploadFile(file);
-    
+    const data = await this.VideoService.uploadFile(file);
+
+    const video = {
+      userId,
+      title: file.originalname,
+      description: '',
+      url: data?.Location ?? '',
+    };
+
+    await this.videoRepository.save(video);
+    return video;
   }
 }
