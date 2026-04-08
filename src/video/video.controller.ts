@@ -18,9 +18,7 @@ export class VideoController {
   @UseInterceptors(FileInterceptor('file'))
   uploadFile(@UploadedFile() file: Express.Multer.File, @Request() req) {
     const userId = req.user.userId;
-    
     return this.UploadVideoCommand.execute(userId, file);
-    // return "File uploaded successfully";
   }
 
 }

@@ -43,4 +43,35 @@ export class VideoService {
             console.log(e);
         }
     }
+
+    async createMultipartUpload(filename: string, mimetype: string) {
+        const res = await this.s3.createMultipartUpload({
+            Bucket: this.AWS_S3_BUCKET,
+            Key: filename,
+            ContentType: mimetype,
+        }).promise();
+
+        return res.UploadId;
+    }
+
+    async getUploadPartUrl(key: string, uploadId: string, partNumber: number) {
+        return this.s3.getSignedUrlPromise('uploadPart', {
+            Bucket: this.AWS_S3_BUCKET,
+            Key: key,
+            UploadId: uploadId,
+            PartNumber: partNumber,
+            Expires: 60 * 10,
+        });
+    }
+
+    async completeUpload(key: string, uploadId: string, parts: any[]) {
+        return this.s3.completeMultipartUpload({
+            Bucket: this.AWS_S3_BUCKET,
+            Key: key,
+            UploadId: uploadId,
+            MultipartUpload: {
+                Parts: parts, // [{ETag, PartNumber}]
+            },
+        }).promise();
+    }
 }
