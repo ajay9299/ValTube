@@ -1,12 +1,15 @@
-import { Controller, Get, Post, Request, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, Post, Request } from '@nestjs/common';
 import { Public } from 'src/auth/guard/auth.guard';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { VideoService } from './domain/services/video.service';
 import { UploadVideoCommand } from './command/video.upload.command';
+import { UploadPartUrlDto, VideoDto } from './presentation/video.dto';
+import { UploadVideoUrlCommand } from './command/video.uploadUrl.command';
 
 @Controller('video')
 export class VideoController {
-  constructor(private readonly UploadVideoCommand: UploadVideoCommand) {}
+  constructor(
+    private readonly UploadVideoCommand: UploadVideoCommand,
+    private readonly UploadVideoUrlCommand: UploadVideoUrlCommand
+  ) { }
 
   @Public()
   @Get()
@@ -14,11 +17,15 @@ export class VideoController {
     return 'Hello Video!';
   }
 
-  @Post()
-  @UseInterceptors(FileInterceptor('file'))
-  uploadFile(@UploadedFile() file: Express.Multer.File, @Request() req) {
+  @Post('upload-key')
+  uploadFile(@Request() req, @Body() videoDto: VideoDto) {
     const userId = req.user.userId;
-    return this.UploadVideoCommand.execute(userId, file);
+    return this.UploadVideoCommand.execute(userId, videoDto);
+  }
+
+  @Post('upload-part-url')
+  getUploadPartUrl(@Body() body: UploadPartUrlDto) {
+    return this.UploadVideoUrlCommand.execute(body);
   }
 
 }

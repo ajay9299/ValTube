@@ -166,9 +166,7 @@ docker cp private.key vault:/tmp/public.key
 ## Store JWT Keys
 
 ```bash
-vault kv put secret/jwt \
-privateKey=@/vault/file/private.key \
-publicKey=@/vault/file/public.key
+vault kv put secret/jwt \ privateKey=@/tmp/private.key \ publicKey=@/tmp/public.key
 ```
 
 ---

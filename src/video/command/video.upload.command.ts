@@ -1,27 +1,15 @@
-import { Inject } from "@nestjs/common";
-import { VIDEO_REPOSITORY } from "../domain/repository/video.repository";
-import type { VideoRepository } from "../domain/repository/video.repository";
+import { Injectable } from "@nestjs/common";
 import { VideoService } from "../domain/services/video.service";
+import { VideoDto } from "../presentation/video.dto";
 
+@Injectable()
 export class UploadVideoCommand {
   constructor(
-    @Inject(VIDEO_REPOSITORY)
-    private readonly videoRepository: VideoRepository,
-    private readonly VideoService: VideoService
-
+    private readonly videoService: VideoService
   ) {}
 
-  async execute(userId: string, file: Express.Multer.File) {
-    const data = await this.VideoService.uploadFile(file);
-
-    const video = {
-      userId,
-      title: file.originalname,
-      description: '',
-      url: data?.Location ?? '',
-    };
-
-    await this.videoRepository.save(video);
-    return video;
+  async execute(userId: string, file: VideoDto) {
+    const data = await this.videoService.createMultipartUpload(file)
+    return data;
   }
 }

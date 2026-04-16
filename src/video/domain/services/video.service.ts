@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import * as AWS from 'aws-sdk';
+import { VideoDto } from 'src/video/presentation/video.dto';
 
 @Injectable()
 export class VideoService {
-    AWS_S3_BUCKET = 'content';
+    AWS_S3_BUCKET = 'video';
     s3 = new AWS.S3({
         endpoint: 'http://localhost:4566',
         accessKeyId: 'test',
@@ -44,14 +45,18 @@ export class VideoService {
         }
     }
 
-    async createMultipartUpload(filename: string, mimetype: string) {
+    async createMultipartUpload(fileInfo: VideoDto) {
+        const { fileName, mimeType } = fileInfo
         const res = await this.s3.createMultipartUpload({
             Bucket: this.AWS_S3_BUCKET,
-            Key: filename,
-            ContentType: mimetype,
+            Key: fileName,
+            ContentType: mimeType,
         }).promise();
 
-        return res.UploadId;
+        return {
+            uploadId: res.UploadId,
+            key: res.Key,
+        };
     }
 
     async getUploadPartUrl(key: string, uploadId: string, partNumber: number) {
