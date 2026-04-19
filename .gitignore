@@ -42,6 +42,12 @@ lerna-debug.log*
 .env.production.local
 .env.local
 
+# Security - do not commit private/public keys
+private.key
+public.key
+*.pem
+*.key
+
 # temp directory
 .temp
 .tmp

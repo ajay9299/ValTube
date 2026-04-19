@@ -124,49 +124,73 @@ docker ps
 
 # 🔐 Vault Setup (First Time Only)
 
-## Enter Vault Container
+## Quick Setup (Automated)
+
+Run the setup script to automatically configure Vault with your JWT keys:
+
+```bash
+./setup-vault.sh
+```
+
+This script will:
+- Copy your `private.key` and `public.key` to the Vault container
+- Enable the KV v2 secrets engine
+- Store the JWT keys in Vault at `secret/jwt`
+- Verify the keys were stored successfully
+
+---
+
+## Manual Setup (If needed)
 
 ```bash
 docker exec -it vault sh
 ```
 
-## Set Vault Address
+## Set Vault Address (Inside Container)
 
 ```bash
 export VAULT_ADDR=http://127.0.0.1:8200
+export VAULT_TOKEN=root
 ```
 
-## Initialize Vault
-
-```bash
-vault operator init
-```
-
-## Unseal Vault (Run 3 times with different keys)
-
-```bash
-vault operator unseal
-```
-
-## Login
-
-```bash
-vault login <ROOT_TOKEN>
-```
-
-## Enable KV v2 Engine
+## Enable KV v2 Engine (if not already enabled)
 
 ```bash
 vault secrets enable -path=secret kv-v2
 ```
 
-## Copy files to vault volume
-docker cp private.key vault:/tmp/public.key 
-
-## Store JWT Keys
+## Check Vault Status
 
 ```bash
-vault kv put secret/jwt \ privateKey=@/tmp/private.key \ publicKey=@/tmp/public.key
+vault status
+```
+
+## Copy files to vault container
+
+```bash
+docker cp private.key vault:/tmp/private.key
+docker cp public.key vault:/tmp/public.key
+```
+
+## Store JWT Keys (from your host machine)
+
+```bash
+# Set environment variables and store keys in one command
+docker exec vault sh -c "export VAULT_ADDR=http://127.0.0.1:8200 && export VAULT_TOKEN=root && vault kv put secret/jwt privateKey=@/tmp/private.key publicKey=@/tmp/public.key"
+```
+
+Or if inside the Vault container:
+
+```bash
+export VAULT_ADDR=http://127.0.0.1:8200
+export VAULT_TOKEN=root
+vault kv put secret/jwt privateKey=@/tmp/private.key publicKey=@/tmp/public.key
+```
+
+## Verify keys were stored
+
+```bash
+docker exec vault sh -c "export VAULT_ADDR=http://127.0.0.1:8200 && export VAULT_TOKEN=root && vault kv get secret/jwt"
 ```
 
 ---
