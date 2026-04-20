@@ -22,3 +22,16 @@ export class UploadPartUrlDto {
     @IsNotEmpty()
     partNumber: number
 }
+
+export class CompleteUploadDto {
+    @IsString()
+    @IsNotEmpty()
+    key: string
+
+    @IsString()
+    @IsNotEmpty()
+    uploadId: string
+
+    @IsNotEmpty()
+    parts: { ETag: string; PartNumber: number }[] = []
+}

@@ -69,7 +69,7 @@ export class VideoService {
         });
     }
 
-    async completeUpload(key: string, uploadId: string, parts: any[]) {
+    async completeUpload(key: string, uploadId: string, parts: { ETag: string; PartNumber: number }[]) {
         return this.s3.completeMultipartUpload({
             Bucket: this.AWS_S3_BUCKET,
             Key: key,

@@ -16,4 +16,8 @@ export class MongoVideoRepository implements VideoRepository {
     async findById(id: string): Promise<any> {
         return await this.videoModel.findById(id);
     }
+
+    async findByUserId(userId: string): Promise<any[]> {
+        return await this.videoModel.find({ userId });
+    }
 }
