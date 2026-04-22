@@ -4,10 +4,13 @@
 
 echo "🔐 Setting up Vault..."
 
+# Auto-detect script directory
+KEYS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 # Step 1: Copy keys to vault container
 echo "📋 Copying keys to Vault container..."
-docker cp /Users/vibhorsoni/Documents/youtube/ValTube/private.key vault:/tmp/private.key
-docker cp /Users/vibhorsoni/Documents/youtube/ValTube/public.key vault:/tmp/public.key
+docker cp "$KEYS_DIR/private.key" vault:/tmp/private.key
+docker cp "$KEYS_DIR/public.key" vault:/tmp/public.key
 
 # Step 2: Execute commands in Vault container
 echo "🔑 Configuring Vault..."
